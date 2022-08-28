@@ -19,14 +19,19 @@ spec:
       serviceAccountName: postgres
       containers:
       - image: postgres:10.13
+        args: ["$(POSTGRES_DB)","$(POSTGRES_USER)"]
         name: postgres
         env:
           - name: POSTGRES_DB
-            value: POSTGRES_DB
+            valueFrom:
+              configMap:
+                name: postgres-config
+                key: POSTGRES_DB
           - name: POSTGRES_USER
-            value: POSTGRES_USER
-          - name: POSTGRES_PASSWORD
-            value: POSTGRES_PASSWORD
+            valueFrom:
+              configMap:
+                name: postgres-config
+                key: POSTGRES_USER
         ports:
         - containerPort: 5432
           protocol: TCP
