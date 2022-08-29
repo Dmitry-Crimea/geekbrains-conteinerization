@@ -51,10 +51,9 @@ spec:
         volumeMounts:
         - name: pvc-nfs
           mountPath: /var/lib/postgresql/data
-        - name: pgdata
-          mountPath: /var/lib/postgresql/data/pgdata
-      volumes:
-      - name: pvc-nfs
-        persistentVolumeClaim:
-          claimName: pvc-nfs
+        pgdata:
+          volumes:
+          - name: pvc-nfs
+            persistentVolumeClaim:
+            claimName: pvc-nfs
 
