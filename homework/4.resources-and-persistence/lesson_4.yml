@@ -9,7 +9,10 @@ spec:
     matchLabels:
       app: postgres
   strategy:
-    type: Recreate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -19,19 +22,31 @@ spec:
       serviceAccountName: postgres
       containers:
       - image: postgres:10.13
-        args: ["$(POSTGRES_DB)","$(POSTGRES_USER)"]
+        args: ["$(POSTGRES_DB)","$(POSTGRES_USER)","$(POSTGRES_PASSWORD)"]
         name: postgres
         env:
+          - name: POSTGRES_PASSWORD
+            value: POSTGRES_PASSWORD
           - name: POSTGRES_DB
             valueFrom:
-              configMap:
+              configMapKeyRef:
                 name: postgres-config
                 key: POSTGRES_DB
           - name: POSTGRES_USER
             valueFrom:
-              configMap:
+              configMapKeyRef:
                 name: postgres-config
                 key: POSTGRES_USER
         ports:
         - containerPort: 5432
           protocol: TCP
+        volumeMounts:
+        - name: pgdata
+          mountPath: /var/lib/postgresql/data/pgdata
+        - name: pvc-nfs
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pvc-nfs
+        persistentVolumeClaim:
+          claimName: pvc-nfs
+

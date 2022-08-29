@@ -10,5 +10,5 @@ spec:
     requests:
       storage: 10Gi
   volumeName: "pv-nfs"
-  storageClassName: ""
+  storageClassName: csi-ceph-hdd-ms1
   
