@@ -49,10 +49,10 @@ spec:
 #        - containerPort: 5432
 #          protocol: TCP
         volumeMounts:
-        - name: pgdata
-          mountPath: /var/lib/postgresql/data/pgdata
         - name: pvc-nfs
           mountPath: /var/lib/postgresql/data
+        - name: pgdata
+          mountPath: /var/lib/postgresql/data/pgdata
       volumes:
       - name: pvc-nfs
         persistentVolumeClaim:
