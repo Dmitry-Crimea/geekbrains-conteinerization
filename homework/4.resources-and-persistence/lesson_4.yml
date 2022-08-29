@@ -22,11 +22,14 @@ spec:
       serviceAccountName: postgres
       containers:
       - image: postgres:10.13
-        args: ["$(POSTGRES_DB)","$(POSTGRES_USER)","$(POSTGRES_PASSWORD)"]
+        args: ["$(POSTGRES_DB)","$(POSTGRES_USER)","$(POSTGRES_PASSWORD)","$(POSTGRES_PORT)"]
         name: postgres
         env:
           - name: POSTGRES_PASSWORD
-            value: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgre-secret
+                key: postgre-secret
           - name: POSTGRES_DB
             valueFrom:
               configMapKeyRef:
@@ -37,9 +40,14 @@ spec:
               configMapKeyRef:
                 name: postgres-config
                 key: POSTGRES_USER
-        ports:
-        - containerPort: 5432
-          protocol: TCP
+          - name: POSTGRES_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: POSTGRES_PORT
+#        ports:
+#        - containerPort: 5432
+#          protocol: TCP
         volumeMounts:
         - name: pgdata
           mountPath: /var/lib/postgresql/data/pgdata

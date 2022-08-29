@@ -8,4 +8,5 @@ metadata:
 data:
   POSTGRES_DB: testdatabase
   POSTGRES_USER: testuser
+  POSTGRES_PORT: 5432
 
