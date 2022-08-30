@@ -18,18 +18,17 @@ spec:
       labels:
         app: postgres
     spec:
-      hostNetwork: true
-      serviceAccountName: postgres
+#      hostNetwork: true
+#      serviceAccountName: postgres
       containers:
       - image: postgres:10.13
-        args: ["$(POSTGRES_DB)","$(POSTGRES_USER)","$(POSTGRES_PASSWORD)","$(POSTGRES_PORT)"]
         name: postgres
         env:
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: postgre-secret
-                key: postgre-secret
+                key: POSTGRES_PASSWORD
           - name: POSTGRES_DB
             valueFrom:
               configMapKeyRef:
@@ -40,20 +39,19 @@ spec:
               configMapKeyRef:
                 name: postgres-config
                 key: POSTGRES_USER
-          - name: POSTGRES_PORT
+          - name: PGDATA
             valueFrom:
               configMapKeyRef:
                 name: postgres-config
-                key: POSTGRES_PORT
-#        ports:
-#        - containerPort: 5432
-#          protocol: TCP
+                key: PGDATA
+        ports:
+        - containerPort: 5432
+          protocol: TCP
         volumeMounts:
         - name: pvc-nfs
           mountPath: /var/lib/postgresql/data
-        pgdata:
-          volumes:
-          - name: pvc-nfs
-            persistentVolumeClaim:
-            claimName: pvc-nfs
+      volumes:
+      - name: pvc-nfs
+        persistentVolumeClaim:
+          claimName: pvc-nfs
 
