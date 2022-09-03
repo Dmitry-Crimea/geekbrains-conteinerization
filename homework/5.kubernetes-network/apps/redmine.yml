@@ -25,6 +25,11 @@ spec:
               secretKeyRef:
                 name: redmine-secret
                 key: password
+          - name: REDMINE_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgre-secret
+                key: password
           - name: REDMINE_DB_DATABASE
             valueFrom:
               configMapKeyRef:
@@ -40,6 +45,10 @@ spec:
               configMapKeyRef:
                 name: redmine-config
                 key: redmine_db_username
+#          - name: liveness
+#            livenessProbe:
+#              exec:
+#                command:
         ports:
         - containerPort: 3000
           protocol: TCP
