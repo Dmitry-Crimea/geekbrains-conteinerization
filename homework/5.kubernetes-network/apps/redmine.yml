@@ -24,7 +24,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 name: redmine-secret
-                key:  redmine_db_postgres
+                key: password
           - name: REDMINE_DB_DATABASE
             valueFrom:
               configMapKeyRef:

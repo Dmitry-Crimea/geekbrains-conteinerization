@@ -2,7 +2,7 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: my-ingress
+  name: apps-ingress
   namespace: lesson5
   annotations:
     kubernetes.io/ingress.class: nginx
@@ -14,6 +14,6 @@ spec:
         pathType: Prefix
         backend:
           service:
-            name: my-service
+            name: redmine
             port:
-              number: 8080
+              number: 30000
