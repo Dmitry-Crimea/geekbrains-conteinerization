@@ -1,0 +1,56 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redmine
+  namespace: lesson5
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redmine
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redmine
+    spec:
+      containers:
+      - image: redmine:4.1.1
+        name: redmine
+        env:
+          - name: REDMINE_SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: redmine-secret
+                key: password
+          - name: REDMINE_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgre-secret
+                key: password
+          - name: REDMINE_DB_DATABASE
+            valueFrom:
+              configMapKeyRef:
+                name: redmine-config
+                key: redmine_db_database
+          - name: REDMINE_DB_POSTGRES
+            valueFrom:
+              configMapKeyRef:
+                name: redmine-config
+                key: redmine_db_postgres
+          - name: REDMINE_DB_USERNAME
+            valueFrom:
+              configMapKeyRef:
+                name: redmine-config
+                key: redmine_db_username
+          - name: liveness
+            livenessProbe:
+              tcpSocket:
+                port: 3000
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+
+
