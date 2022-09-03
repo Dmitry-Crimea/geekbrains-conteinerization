@@ -45,10 +45,10 @@ spec:
               configMapKeyRef:
                 name: redmine-config
                 key: redmine_db_username
-#          - name: liveness
-#            livenessProbe:
-#              exec:
-#                command:
+          - name: liveness
+            livenessProbe:
+              tcpSocket:
+                port: 3000
         ports:
         - containerPort: 3000
           protocol: TCP
