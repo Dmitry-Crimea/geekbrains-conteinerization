@@ -1,0 +1,72 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: lesson5
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+#      hostNetwork: true
+#      serviceAccountName: postgres
+      containers:
+      - image: postgres:10.13
+        name: postgres
+        env:
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: postgre-secret
+                key: POSTGRES_PASSWORD
+          - name: POSTGRES_DB
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: postgres_db
+          - name: POSTGRES_USER
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: postgres_user
+          - name: PGDATA
+            valueFrom:
+              configMapKeyRef:
+                name: postgres-config
+                key: pgdata
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        volumeMounts:
+        - name: pvc-nfs
+          mountPath: /var/lib/postgresql/data
+#        readinessProbe:
+#          failureThreshold: 3
+#          httpGet:
+#            path: /
+#            port: 80
+#          periodSeconds: 10
+#          successThreshold: 1
+#          timeoutSeconds: 60
+#        livenessProbe:
+#          failureThreshold: 3
+#          httpGet:
+#            path: /
+#            port: 80
+#          periodSeconds: 10
+#          successThreshold: 1
+#          timeoutSeconds: 60
+#          initialDelaySeconds: 10
+      volumes:
+      - name: pvc-nfs
+        persistentVolumeClaim:
+          claimName: pvc-nfs
+
