@@ -10,15 +10,15 @@ data:
   postgres_db: testdatabase
   postgres_user: testuser
   pgdata: /var/lib/postgresql/data/pgdata
-  redmine_db_postgres: database
-
----
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: redmine-config
-  namespace: lesson5
-  labels:
-    app: redmine
-data:
-  redmine_db_postgres: database
+#  redmine_db_postgres: database
+#
+#---
+#apiVersion: v1
+#kind: ConfigMap
+#metadata:
+#  name: redmine-config
+#  namespace: lesson5
+#  labels:
+#    app: redmine
+#data:
+#  redmine_db_postgres: database

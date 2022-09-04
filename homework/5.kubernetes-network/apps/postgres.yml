@@ -1,23 +1,22 @@
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: postgres
   namespace: lesson5
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: postgres
-  strategy:
-    type: Recreate
+  serviceName: postgres
+#  strategy:
+#    type: Recreate
   template:
     metadata:
       labels:
         app: postgres
     spec:
-#      hostNetwork: true
-#      serviceAccountName: postgres
       containers:
       - image: postgres:10.13
         name: postgres
@@ -59,8 +58,17 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 5
-      volumes:
-      - name: pvc-nfs
-        persistentVolumeClaim:
-          claimName: pvc-nfs
-
+#      volumes:
+#      - name: pvc-nfs
+#        persistentVolumeClaim:
+#          claimName: pvc-nfs
+  volumeClaimTemplates:
+  - metadata:
+      name: pvc-nfs
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: "csi-high-iops-ms1"
+      resources:
+        requests:
+          storage: 10Gi
