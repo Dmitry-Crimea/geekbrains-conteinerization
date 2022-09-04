@@ -20,11 +20,11 @@ spec:
       - image: redmine:4.1.1
         name: redmine
         env:
-          - name: REDMINE_SECRET_KEY_BASE
-            valueFrom:
-              secretKeyRef:
-                name: redmine-secret
-                key: password
+#          - name: REDMINE_SECRET_KEY_BASE
+#            valueFrom:
+#              secretKeyRef:
+#                name: redmine-secret
+#                key: password
           - name: REDMINE_DB_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -35,11 +35,11 @@ spec:
               configMapKeyRef:
                 name: postgres-config
                 key: postgres_db
-          - name: REDMINE_DB_POSTGRES
-            valueFrom:
-              configMapKeyRef:
-                name: redmine-config
-                key: redmine_db_postgres
+#          - name: REDMINE_DB_POSTGRES
+#            valueFrom:
+#              configMapKeyRef:
+#                name: redmine-config
+#                key: redmine_db_postgres
           - name: REDMINE_DB_USERNAME
             valueFrom:
               configMapKeyRef:
