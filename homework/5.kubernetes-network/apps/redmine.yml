@@ -33,8 +33,8 @@ spec:
           - name: REDMINE_DB_DATABASE
             valueFrom:
               configMapKeyRef:
-                name: redmine-config
-                key: redmine_db_database
+                name: postgres-config
+                key: postgres_db
           - name: REDMINE_DB_POSTGRES
             valueFrom:
               configMapKeyRef:
@@ -43,12 +43,8 @@ spec:
           - name: REDMINE_DB_USERNAME
             valueFrom:
               configMapKeyRef:
-                name: redmine-config
-                key: redmine_db_username
-          - name: liveness
-            livenessProbe:
-              tcpSocket:
-                port: 3000
+                name: postgres-config
+                key: postgres_user
         ports:
         - containerPort: 3000
           protocol: TCP

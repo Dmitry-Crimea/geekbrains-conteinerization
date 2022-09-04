@@ -10,6 +10,7 @@ data:
   postgres_db: testdatabase
   postgres_user: testuser
   pgdata: /var/lib/postgresql/data/pgdata
+  redmine_db_postgres: database
 
 ---
 apiVersion: v1
@@ -18,8 +19,6 @@ metadata:
   name: redmine-config
   namespace: lesson5
   labels:
-    app: postgres
+    app: redmine
 data:
   redmine_db_postgres: database
-  redmine_db_username: ${postgres_user}
-  redmine_db_database: ${postgres_db}

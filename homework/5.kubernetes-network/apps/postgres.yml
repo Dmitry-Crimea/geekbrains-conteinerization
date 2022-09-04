@@ -48,23 +48,17 @@ spec:
         volumeMounts:
         - name: pvc-nfs
           mountPath: /var/lib/postgresql/data
-#        readinessProbe:
-#          failureThreshold: 3
-#          httpGet:
-#            path: /
-#            port: 80
-#          periodSeconds: 10
-#          successThreshold: 1
-#          timeoutSeconds: 60
-#        livenessProbe:
-#          failureThreshold: 3
-#          httpGet:
-#            path: /
-#            port: 80
-#          periodSeconds: 10
-#          successThreshold: 1
-#          timeoutSeconds: 60
-#          initialDelaySeconds: 10
+        livenessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -c
+            - exec pg_isready -U "testuser" -h 127.0.0.1 -p 5432
+          failureThreshold: 6
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
       volumes:
       - name: pvc-nfs
         persistentVolumeClaim:
