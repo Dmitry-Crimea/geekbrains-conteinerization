@@ -20,11 +20,11 @@ spec:
       - image: redmine:4.1.1
         name: redmine
         env:
-          - name: REDMINE_SECRET_KEY_BASE
-            valueFrom:
-              secretKeyRef:
-                name: redmine-secret
-                key: password
+#          - name: REDMINE_SECRET_KEY_BASE
+#            valueFrom:
+#              secretKeyRef:
+#                name: redmine-secret
+#                key: password
           - name: REDMINE_DB_PASSWORD
             valueFrom:
               secretKeyRef:
@@ -33,22 +33,18 @@ spec:
           - name: REDMINE_DB_DATABASE
             valueFrom:
               configMapKeyRef:
-                name: redmine-config
-                key: redmine_db_database
-          - name: REDMINE_DB_POSTGRES
-            valueFrom:
-              configMapKeyRef:
-                name: redmine-config
-                key: redmine_db_postgres
+                name: postgres-config
+                key: postgres_db
+#          - name: REDMINE_DB_POSTGRES
+#            valueFrom:
+#              configMapKeyRef:
+#                name: redmine-config
+#                key: redmine_db_postgres
           - name: REDMINE_DB_USERNAME
             valueFrom:
               configMapKeyRef:
-                name: redmine-config
-                key: redmine_db_username
-          - name: liveness
-            livenessProbe:
-              tcpSocket:
-                port: 3000
+                name: postgres-config
+                key: postgres_user
         ports:
         - containerPort: 3000
           protocol: TCP
