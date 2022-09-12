@@ -1,0 +1,78 @@
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: prometheus
+spec:
+  serviceName: prometheus
+  replicas: 3
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      initContainers:
+      - image: busybox
+        name: mount-permissions-fix
+        command: ["sh", "-c", "chmod 777 /prometheus"]
+        volumeMounts:
+        - name: prometheus
+          mountPath: /prometheus
+      serviceAccount: prometheus
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: prometheus-k8s
+          image: prom/prometheus:v2.19.2
+          ports:
+            - name: prom
+              protocol: TCP
+              containerPort: 9090
+          livenessProbe:
+            exec:
+              command: ["rabbitmqctl", "status"]
+            initialDelaySeconds: 60
+            periodSeconds: 60
+            timeoutSeconds: 15
+          readinessProbe:
+            exec:
+              command: ["rabbitmqctl", "status"]
+            initialDelaySeconds: 20
+            periodSeconds: 60
+            timeoutSeconds: 10
+          imagePullPolicy: Always
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/prometheus
+            - name: prometheus
+              mountPath: /prometheus
+      volumes:
+        - name: config-volume
+          configMap:
+            name: prometheus-config
+            items:
+              - key: prometheus.yml
+                path: prometheus.yml
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - promrtheus
+                topologyKey: kubernetes.io/hostname
+  volumeClaimTemplates:
+    - metadata:
+        name: prometheus
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 5Gi
+        storageClassName: csi-ceph-hdd-ms1

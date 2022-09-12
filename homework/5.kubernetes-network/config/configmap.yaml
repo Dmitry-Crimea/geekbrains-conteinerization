@@ -10,7 +10,7 @@ data:
   postgres_db: testdatabase
   postgres_user: testuser
   pgdata: /var/lib/postgresql/data/pgdata
-#  redmine_db_postgres: database
+  redmine_db_postgres: database
 #
 #---
 #apiVersion: v1
