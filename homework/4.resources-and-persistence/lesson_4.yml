@@ -9,6 +9,9 @@ spec:
     matchLabels:
       app: postgres
   strategy:
+#    rollingUpdate:
+#      maxSurge: 0
+#      maxUnavailable: 1
     type: Recreate
   template:
     metadata:
@@ -20,35 +23,41 @@ spec:
       containers:
       - image: postgres:10.13
         name: postgres
-        env:
+        envFrom:
+#          - configMapRef:
+#             name: postgres-config
           - name: POSTGRES_PASSWORD
             valueFrom:
               secretKeyRef:
                 name: postgre-secret
-                key: POSTGRES_PASSWORD
+                key: password
           - name: POSTGRES_DB
             valueFrom:
               configMapKeyRef:
                 name: postgres-config
-                key: POSTGRES_DB
+                key: 1
           - name: POSTGRES_USER
             valueFrom:
               configMapKeyRef:
                 name: postgres-config
                 key: POSTGRES_USER
-          - name: PGDATA
+          - name: POSTGRES_PORT
             valueFrom:
               configMapKeyRef:
                 name: postgres-config
-                key: PGDATA
+                key: POSTGRES_PORT
         ports:
         - containerPort: 5432
           protocol: TCP
         volumeMounts:
+#        - name: conf_nginx
+#          muontPath: /etc/nginx/conf.d/default.conf
         - name: pvc-nfs
           mountPath: /var/lib/postgresql/data
       volumes:
       - name: pvc-nfs
         persistentVolumeClaim:
-          claimName: pvc-nfs
+        claimName: pvc-nfs
+#      - name: conf_nginx
+#        value: default.conf
 

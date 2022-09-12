@@ -2,20 +2,18 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: geekbrains
+  name: rabbitmq
   annotations:
     kubernetes.io/ingress.class: nginx
-    nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
   rules:
-  - host: <CHANGE ME>
-    http:
+  - http:
       paths:
-      - path: "/users"
+      - path: "/"
         pathType: Prefix
         backend:
           service:
-            name: geekbrains
+            name: rabbitmq
             port:
-              number: 8000
+              number: 15672
               

@@ -6,11 +6,10 @@ metadata:
   namespace: lesson5
 spec:
   ports:
-  - port: 54320
+  - port: 5432
     targetPort: 5432
   selector:
     app: postgres
-  type: ClusterIP
 
 ---
 apiVersion: v1
